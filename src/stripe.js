@@ -63,7 +63,6 @@ export async function createCheckout(tenantId, customerId) {
   if (!key?.startsWith('sk_test_') || !price?.startsWith('price_')) throw new ApiError(503, 'stripe_unconfigured', 'Stripe test credentials and Pro price are required.');
   const body = new URLSearchParams({ mode: 'subscription', 'line_items[0][price]': price,
     'line_items[0][quantity]': '1', client_reference_id: tenantId,
-    'payment_method_types[0]': 'card',
     'subscription_data[metadata][tenant_id]': tenantId,
     success_url: `${base}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${base}/checkout/cancel` });
