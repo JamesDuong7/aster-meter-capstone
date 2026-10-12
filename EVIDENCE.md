@@ -2,7 +2,7 @@
 
 Recorded 2026-10-11 (Pacific time). Commands were run in this repository. Local HTTP probes used demo databases outside the repository. A real Stripe sandbox Checkout and signed webhook delivery were completed in test mode. No customer details, API keys, or webhook secrets are included here.
 
-`BUILDLOG.md` is intentionally absent per the project owner's instruction to ignore the brief's AI-use log rule. The brief also lists it as a machine-checked submission file, so the repository is not yet submission-complete under that rubric.
+`BUILDLOG.md` now records the substantial AI assistance, errors found during testing, and the corrections made. It was added at the project owner's later request.
 
 ## Section 6 requirements
 
@@ -13,7 +13,7 @@ Recorded 2026-10-11 (Pacific time). Commands were run in this repository. Local 
 | Monthly cost and token rules | `cached input is cheaper and reasoning is priced as output with exact integers` passed; `GET /usage` total shown below. | Verified |
 | Checkout session against Stripe test mode | Stripe price API returned HTTP 200, `livemode=false`, `active=true`, `currency=usd`, `recurring=month`, `unitAmount=1000`. `POST /checkout` returned a `cs_test_` session; the hosted Sandbox page showed Aster Meter Pro for $10/month, and the test Checkout completed. | Verified live in test mode |
 | Signed, deduplicated webhooks and plan sync | Stripe CLI forwarded `checkout.session.completed` and the app returned HTTP 200. `GET /usage` changed Free → Pro. The same real event replayed twice returned `duplicate:true`; database count stayed 1. A forged signature returned HTTP 400. Unit tests also passed. | Verified live in test mode |
-| Tenant model and docs | Migration has tenants, plans, subscriptions, usage events, indexes, and Stripe event IDs. `README.md`, `DESIGN.md`, `capstone.yaml`, `.env.example`, and this file are present. | Verified |
+| Tenant model and docs | Migration has tenants, plans, subscriptions, usage events, indexes, and Stripe event IDs. `README.md`, `DESIGN.md`, `BUILDLOG.md`, `capstone.yaml`, `.env.example`, and this file are present. | Verified |
 
 ### Exact test output
 

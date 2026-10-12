@@ -2,6 +2,8 @@
 
 A small multi-tenant usage metering and billing engine for the FlyRank backend capstone. It meters a simulated generation request, enforces Free/Pro monthly quotas, calculates costs with integer microcents, and upgrades subscriptions through signed Stripe **test-mode** webhooks.
 
+The build history and AI assistance are documented in `BUILDLOG.md`; acceptance proofs are in `EVIDENCE.md`.
+
 ## Architecture
 
 ```text
