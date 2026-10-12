@@ -1,0 +1,10 @@
+run: npm run start
+seed: npm run seed
+test: npm test
+base_url: http://localhost:3000
+endpoints:
+  health: GET /health
+  meter: POST /generate
+  usage: GET /usage
+  checkout: POST /checkout
+  stripe_webhook: POST /webhooks/stripe

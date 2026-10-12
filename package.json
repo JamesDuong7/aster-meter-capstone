@@ -1,0 +1,14 @@
+{
+  "name": "aster-meter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "run": "node src/server.js",
+    "start": "node src/server.js",
+    "seed": "node scripts/seed.js",
+    "test": "node --test",
+    "rollup": "node scripts/rollup.js"
+  }
+}
