@@ -23,7 +23,7 @@ Scheduler --> npm run rollup --> rebuildable monthly_rollups cache
 
 ## Requirements
 
-Node.js 24 or newer. No npm install, Docker, paid service, or card is needed for the local core. Stripe test-mode Checkout requires a free Stripe account and Stripe CLI for local webhook forwarding; it was not exercised against a live Stripe account in this environment.
+Node.js 24 or newer. No npm install, Docker, paid service, or card is needed for the local core. Stripe test-mode Checkout requires a free Stripe account and Stripe CLI for local webhook forwarding. A real sandbox Checkout and signed webhook delivery were verified; see `EVIDENCE.md`.
 
 ## Run and seed
 
@@ -73,6 +73,6 @@ The app only accepts `sk_test_` keys for Checkout. Secrets are environment-only 
 ## Limitations
 
 - The core uses Node's built-in HTTP server and SQLite, with no external framework or Postgres. This keeps local setup one command, but differs from the suggested Express/FastAPI stack.
-- Stripe CLI and live test Checkout need the evaluator's own free test-mode credentials; no credentials are bundled. Automated tests cover signed event verification and subscription synchronization with representative events, but do not prove an actual external Checkout session completed.
+- The evaluator needs their own free Stripe test-mode credentials to repeat Checkout; no credentials are bundled. Automated tests and a real sandbox Checkout cover subscription synchronization.
 - No multi-region coordination, invoices, proration, or overage billing. SQLite's single writer transaction protects a single deployed database file.
 - Stripe event ordering uses event creation time and event ID to reject stale events. Events with identical timestamps can have uncertain actual order; reconciliation against Stripe would be the production follow-up.
