@@ -21,7 +21,8 @@ test('cached input is cheaper and reasoning is priced as output with exact integ
   const cost = costMicrocents({ api_calls: 1, input_tokens: 1_000_000, cached_input_tokens: 1_000_000,
     output_tokens: 1_000_000, reasoning_tokens: 1_000_000 });
   assert.equal(cost, 1_850_500_000);
-  assert.deepEqual(money(cost), { currency: 'USD', microcents: cost, centsRounded: 1851, dollars: '18.505000' });
+  assert.deepEqual(money(cost), { currency: 'USD', microcents: cost, centsRounded: 1851, dollars: '18.50500000' });
+  assert.equal(money(50).dollars, '0.00000050');
 });
 
 test('retry mirrors first response and inserts one event; changed body conflicts', () => {
@@ -51,6 +52,13 @@ test('inactive subscription returns 402 without recording usage', () => {
   assert.equal(db.prepare('SELECT count(*) AS n FROM usage_events').get().n,0);
 });
 
+test('bad input is a clean 400 and never writes usage', () => {
+  const db = fixture();
+  assert.throws(() => recordUsage(db,'alpha','bad-input-001',{ input_tokens: -1 },now), e => e.status === 400);
+  assert.throws(() => recordUsage(db,'alpha','bad-input-002',{ input_tokens: 1.5 },now), e => e.status === 400);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM usage_events').get().n,0);
+});
+
 test('signed checkout upgrades once, stale webhook cannot undo it, forged signature fails', () => {
   const db = fixture();
   const event = { id: 'evt_checkout_001', type: 'checkout.session.completed', created: 1_760_000_000,
@@ -69,4 +77,13 @@ test('signed checkout upgrades once, stale webhook cannot undo it, forged signat
   processStripeEvent(db,stale);
   assert.equal(usageSummary(db,'alpha','2026-10').plan,'pro');
   assert.equal(db.prepare('SELECT count(*) AS n FROM stripe_events WHERE event_id=?').get(event.id).n,1);
+});
+
+test('unpaid and live-mode Stripe events never change the plan', () => {
+  const db = fixture();
+  const event = { id: 'evt_unpaid', type: 'checkout.session.completed', created: 1_760_000_000,
+    data: { object: { mode: 'subscription', payment_status: 'unpaid', client_reference_id: 'alpha', subscription: 'sub_999', customer: 'cus_999' } } };
+  assert.throws(() => processStripeEvent(db,event), e => e.status === 400);
+  assert.throws(() => processStripeEvent(db,{ ...event, livemode: true, id: 'evt_live' }), e => e.status === 400);
+  assert.equal(usageSummary(db,'alpha','2026-10').plan,'free');
 });

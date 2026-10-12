@@ -12,10 +12,12 @@ export function costMicrocents(v) {
 }
 
 export function money(microcents) {
+  const wholeDollars = Math.floor(microcents / 100_000_000);
+  const fractionalDollars = String(microcents % 100_000_000).padStart(8, '0');
   return {
     currency: 'USD',
     microcents,
     centsRounded: Math.floor((microcents + 500_000) / 1_000_000),
-    dollars: (microcents / 100_000_000).toFixed(6)
+    dollars: `${wholeDollars}.${fractionalDollars}`
   };
 }

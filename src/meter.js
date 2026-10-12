@@ -74,7 +74,7 @@ export function recordUsage(db, tenantId, key, body, now = new Date()) {
         apiCalls: 1, inputTokens: usage.input_tokens, cachedInputTokens: usage.cached_input_tokens,
         outputTokens: usage.output_tokens, reasoningTokens: usage.reasoning_tokens,
         tokens: tokenTotal(usage)
-      }, cost: money(cost), replayed: false
+      }, cost: money(cost)
     };
     db.prepare(`INSERT INTO usage_events
       (tenant_id,idempotency_key,request_hash,month,api_calls,input_tokens,cached_input_tokens,output_tokens,reasoning_tokens,cost_microcents,response_json)
